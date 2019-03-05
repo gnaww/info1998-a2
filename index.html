@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Fetch</title>
+  <script>
+    const loadRandomName = async () => {
+      const result = await fetch('http://localhost:3000/api/random-name');
+      const json = await result.json();
+      const {first, last} = json;
+      document.getElementById('names').innerHTML = `${first} ${last}`;
+    };
+
+    const name = window.prompt('What is your first name?');
+    (async () => {
+      let fetchResult;
+      if (name !== null) {
+        fetchResult = await fetch(`http://localhost:3000/api/random-joke`, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({firstName: name, lastName: 'smith'}),
+        });
+      } else {
+        fetchResult = await fetch(`http://localhost:3000/api/random-joke`, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({firstName: '', lastName: ''}),
+        });
+      }
+      const joke = await fetchResult.json();
+      document.getElementById('joke').innerHTML = joke.joke;
+    })();
+
+    window.addEventListener('DOMContentLoaded', loadRandomName);
+  </script>
+</head>
+<body>
+<div>
+  Joke using the first name that was prompted and a default last name of smith:
+  <p id="joke"></p>
+</div>
+<br />
+<div>
+  Random First and Last Name:
+  <p id="names"></p>
+</div>
+</body>
+</html>
